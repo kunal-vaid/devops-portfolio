@@ -1,0 +1,28 @@
+---
+- name: Fail fast on unsupported OS families
+  ansible.builtin.fail:
+    msg: "webapp role supports Debian and RedHat families, got {{ ansible_os_family }}"
+  when: ansible_os_family not in _webapp_packages
+
+- name: Create application user and group
+  ansible.builtin.user:
+    name: "{{ webapp_user }}"
+    group: "{{ webapp_group }}"
+    groups: []
+    shell: /usr/sbin/nologin
+    system: true
+    create_home: false
+  notify: Restart nginx
+
+- name: Install nginx and logrotate
+  ansible.builtin.package:
+    name: "{{ webapp_packages }}"
+    state: present
+  become: true
+
+- name: Enable and start nginx
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
+  become: true

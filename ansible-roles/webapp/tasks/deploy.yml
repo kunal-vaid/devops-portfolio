@@ -1,0 +1,19 @@
+---
+- name: Deploy application landing page
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: "/var/www/{{ webapp_name }}/index.html"
+    owner: "{{ webapp_user }}"
+    group: "{{ webapp_group }}"
+    mode: "0644"
+  become: true
+
+- name: Verify nginx config before finishing
+  ansible.builtin.command: nginx -t
+  changed_when: false
+  become: true
+  register: _nginx_test
+
+- name: Show nginx config check result
+  ansible.builtin.debug:
+    msg: "{{ _nginx_test.stderr_lines | default(['nginx config OK']) }}"
