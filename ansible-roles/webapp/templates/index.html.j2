@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ webapp_index_title }}</title>
+</head>
+<body>
+  <h1>{{ webapp_index_title }}</h1>
+  <p>{{ webapp_index_body }}</p>
+  <p>Host: {{ inventory_hostname }} &middot; deployed {{ ansible_date_time.iso8601 | default('n/a') }}</p>
+</body>
+</html>

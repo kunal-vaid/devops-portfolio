@@ -1,0 +1,39 @@
+# Managed by Ansible — do not edit manually.
+upstream {{ webapp_name }} {
+    server 127.0.0.1:{{ webapp_port }};
+    keepalive 32;
+}
+
+server {
+    listen 80;
+{% if webapp_tls_enabled %}
+    listen 443 ssl;
+    ssl_certificate {{ webapp_tls_cert }};
+    ssl_certificate_key {{ webapp_tls_key }};
+{% endif %}
+    server_name {{ webapp_domain }};
+
+    root /var/www/{{ webapp_name }};
+    index index.html;
+
+    access_log /var/log/nginx/{{ webapp_name }}_access.log;
+    error_log  /var/log/nginx/{{ webapp_name }}_error.log warn;
+
+    location / {
+        try_files $uri $uri/ @proxy;
+    }
+
+    location @proxy {
+        proxy_pass http://{{ webapp_name }};
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Connection "";
+    }
+
+    location ~ /\. {
+        deny all;
+    }
+}
