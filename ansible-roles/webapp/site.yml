@@ -1,0 +1,13 @@
+---
+# Example playbook showing how the role is consumed.
+# Run with: ansible-playbook -i inventory/hosts site.yml
+- name: Deploy web application servers
+  hosts: webservers
+  become: true
+  roles:
+    - role: webapp
+      vars:
+        webapp_name: myapp
+        webapp_domain: app.example.com
+        webapp_port: 8080
+        webapp_tls_enabled: false
