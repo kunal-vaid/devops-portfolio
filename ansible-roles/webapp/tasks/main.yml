@@ -1,0 +1,10 @@
+---
+# Entry point: install, configure, then deploy.
+- name: Install required packages
+  ansible.builtin.include_tasks: install.yml
+
+- name: Configure nginx reverse proxy
+  ansible.builtin.include_tasks: configure.yml
+
+- name: Deploy application content
+  ansible.builtin.include_tasks: deploy.yml
