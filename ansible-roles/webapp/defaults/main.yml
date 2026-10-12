@@ -1,0 +1,28 @@
+---
+# Default variables for the webapp role. Override in group_vars / host_vars.
+
+webapp_name: myapp
+webapp_user: webapp
+webapp_group: webapp
+
+# Domain served by nginx
+webapp_domain: app.example.com
+
+# Upstream app port (the app listens here, nginx proxies to it)
+webapp_port: 8080
+
+# Toggle TLS block in the nginx vhost (expects certs managed separately,
+# e.g. by certbot — see the task comments)
+webapp_tls_enabled: false
+webapp_tls_cert: "/etc/ssl/certs/{{ webapp_domain }}.crt"
+webapp_tls_key: "/etc/ssl/private/{{ webapp_domain }}.key"
+
+# Static landing page content
+webapp_index_title: "It works"
+webapp_index_body: "Deployed with Ansible."
+
+# Packages installed per OS family (extend in vars/main.yml)
+webapp_packages: "{{ _webapp_packages[ansible_os_family] | default([]) }}"
+
+# Enable log rotation for nginx access logs
+webapp_logrotate_enabled: true
