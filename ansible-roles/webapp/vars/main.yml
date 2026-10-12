@@ -1,0 +1,9 @@
+---
+# OS-specific package lists, kept out of defaults so roles stay portable.
+_webapp_packages:
+  Debian:
+    - nginx
+    - logrotate
+  RedHat:
+    - nginx
+    - logrotate
